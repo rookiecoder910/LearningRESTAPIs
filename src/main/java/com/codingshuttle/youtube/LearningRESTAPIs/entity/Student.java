@@ -11,9 +11,11 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Student {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-    private String Name;
-    private String Email;
+    private Long id;
+
+    private String name;
+    private String email;
 }

@@ -12,5 +12,6 @@ public interface StudentService {
 
     StudentDto getStudentById(long id);
 
-    @Nullable StudentDto createNewStudent(AddStudentRequestDto addStudentRequestDto);
+     StudentDto createNewStudent(AddStudentRequestDto addStudentRequestDto);
+     void deleteStudentById(long id);
 }

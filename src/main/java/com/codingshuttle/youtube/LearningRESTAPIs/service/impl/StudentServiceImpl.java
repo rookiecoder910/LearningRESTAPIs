@@ -39,8 +39,19 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public @Nullable StudentDto createNewStudent(AddStudentRequestDto addStudentRequestDto) {
         Student newStudent = modelMapper.map(addStudentRequestDto, Student.class); //saved in memory
+
         Student student=studentRepository.save(newStudent); //saved in DB
         return modelMapper.map(student, StudentDto.class);
+    }
+
+    @Override
+    public void deleteStudentById(long id) {
+        if(studentRepository.existsById(id)){
+            studentRepository.deleteById(id);
+        }
+        else {
+            throw new IllegalArgumentException("student not found by id: " + id);
+        }
     }
 
 }

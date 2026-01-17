@@ -1,13 +1,13 @@
 package com.codingshuttle.youtube.LearningRESTAPIs.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-@Data
 
+import lombok.Data;
+
+@Data
 public class AddStudentRequestDto {
 
-        private String Name;
-        private String Email;
-
+    private String name;
+    private String email;
 }
+
+
