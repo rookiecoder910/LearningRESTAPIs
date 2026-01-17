@@ -6,6 +6,7 @@ import com.codingshuttle.youtube.LearningRESTAPIs.entity.Student;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
+import java.util.Map;
 
 public interface StudentService {
     List<StudentDto> getAllStudents();
@@ -14,4 +15,8 @@ public interface StudentService {
 
      StudentDto createNewStudent(AddStudentRequestDto addStudentRequestDto);
      void deleteStudentById(long id);
+
+    StudentDto updateStudent(long id, AddStudentRequestDto addStudentRequestDto);
+
+    StudentDto updatePartialStudent(long id, Map<String, Object> updates);
 }

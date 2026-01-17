@@ -9,6 +9,8 @@ import org.jspecify.annotations.Nullable;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Map;
+
 @Service
 @RequiredArgsConstructor
 public class StudentServiceImpl implements StudentService {
@@ -18,7 +20,7 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public List<StudentDto> getAllStudents() {
         List<Student> students = studentRepository.findAll();
-      return students
+        return students
                 .stream()
                 .map(student -> modelMapper.map(student, StudentDto.class))
                 .toList();
@@ -27,7 +29,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public StudentDto getStudentById(long id) {
-        if(id < 0){
+        if (id < 0) {
             throw new IllegalArgumentException("Invalid ID: must be > 0");
         }
         Student student = studentRepository.findById(id)
@@ -40,18 +42,48 @@ public class StudentServiceImpl implements StudentService {
     public @Nullable StudentDto createNewStudent(AddStudentRequestDto addStudentRequestDto) {
         Student newStudent = modelMapper.map(addStudentRequestDto, Student.class); //saved in memory
 
-        Student student=studentRepository.save(newStudent); //saved in DB
+        Student student = studentRepository.save(newStudent); //saved in DB
         return modelMapper.map(student, StudentDto.class);
     }
 
     @Override
     public void deleteStudentById(long id) {
-        if(studentRepository.existsById(id)){
+        if (studentRepository.existsById(id)) {
             studentRepository.deleteById(id);
-        }
-        else {
+        } else {
             throw new IllegalArgumentException("student not found by id: " + id);
         }
     }
 
+    @Override
+    public StudentDto updateStudent(long id, AddStudentRequestDto addStudentRequestDto) {
+        Student student = studentRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("student not found by id: " + id));
+        modelMapper.map(addStudentRequestDto, student);
+        studentRepository.save(student);
+        return modelMapper.map(student, StudentDto.class);
+    }
+    @Override
+    public StudentDto updatePartialStudent(long id, Map<String, Object> updates) {
+        Student student = studentRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("student not found by id: " + id));
+
+        updates.forEach((field, value) -> {
+            switch (field) {
+                case "name":
+                    student.setName((String) value);
+                    break;
+                case "email":
+                    student.setEmail((String) value);
+                    break;
+                default:
+                    throw new IllegalArgumentException("field is not supported: " + field);
+            } //if the fields are too much use reflection concept
+        });
+
+        Student savedStudent = studentRepository.save(student);
+        return modelMapper.map(savedStudent, StudentDto.class);
+    }
+
 }
+
